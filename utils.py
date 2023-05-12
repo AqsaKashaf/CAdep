@@ -18,10 +18,10 @@ def check_if_valid(host: str) -> bool:
 
     # Remove trailing dot
     if host[-1] == '.':
-        hostname = host[0:-1]
+        host = host[0:-1]
 
     #  Split hostname into list of DNS labels
-    labels = hostname.split('.')
+    labels = host.split('.')
 
     #  Define pattern of DNS label
     #  Can begin and end with a number or letter only
@@ -39,6 +39,6 @@ def get_domain_from_subdomain(domain: str) -> str:
 
 
 def get_hostname_from_url(url: str) -> str:
-    
     parsed_url = urllib.parse.urlparse(url)
+    print(parsed_url)
     return parsed_url.netloc
