@@ -4,12 +4,30 @@
 import re
 import urllib.parse
 
-from tld import get_tld
-from tld.utils import update_tld_names
+import tldextract
+import logging
 
-update_tld_names()
+log = logging.getLogger(__name__)
 
 
+def add_CA_to_OCSP_NAMES(ocsps: list,ca: str) -> None:
+    f = open("OCSP_NAMES","a")
+    f.write(f"{ca},{';'.join(ocsps)}\n")
+    f.close()
+
+def read_OCSP_NAMES() -> dict:
+    f = open("OCSP_NAMES","r")
+    ocsp_CA = {}
+    for line in f:
+        line = line.strip().split(",")
+        ocsps = line[1].split(";")
+        CA = line[0]
+    # print(line)
+        for ocsp in ocsps:
+            # ocsp = get_domain_from_subdomain(ocsp)
+            ocsp_CA[ocsp] = CA
+    f.close()
+    return ocsp_CA
 
 def check_if_valid(host: str) -> bool:
     
@@ -35,10 +53,14 @@ def check_if_valid(host: str) -> bool:
 
 
 def get_domain_from_subdomain(domain: str) -> str:
-    return get_tld(domain)
+    try:
+        tld = tldextract.extract(domain)
+        domain = tld.domain + "." + tld.suffix
+        return domain
+    except Exception as e:
+        log.exception(f"Error in gettign domain from subdomain tld extract {str(e)}, {domain}")
 
 
 def get_hostname_from_url(url: str) -> str:
     parsed_url = urllib.parse.urlparse(url)
-    print(parsed_url)
     return parsed_url.netloc
