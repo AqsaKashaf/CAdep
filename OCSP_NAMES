@@ -72,3 +72,4 @@ netlockkft,crl1.netlock.hu;ocsp1.netlock.hu
 taiwan-ca,twcasslocsp.twca.com.tw;sslserver.twca.com.tw
 securecore,ocsp.securecore-ca.com;crl.securecore-ca.com
 sectigolimited,nijimo.crl.sectigo.com;nijimo.ocsp.sectigo.com
+Amazon,ocsp.r2m02.amazontrust.com;crl.r2m02.amazontrust.com

@@ -91,7 +91,7 @@ def parse_cert(cert: str) -> dict:
 
 
 
-def get_CA_details(host: str, getSAN: bool, san_file: str) -> str :
+def get_CA_details(host: str, getSAN=False, san_file=None) -> str :
    
     if(validators.url(host)):
         host = get_hostname_from_url(host)
@@ -148,12 +148,11 @@ def main():
     host = sys.argv[1]
     ocsp_CA = read_OCSP_NAMES()
     print(find_and_classify(host, get_SAN, SAN_LIB,ocsp_CA))
-    
     # print(host, details["ocsp"], output)
     
 
-def find_and_classify(host: str, getSAN: bool, san_file: str, ocsp_CA: dict) -> tuple:
-    details, sans = get_CA_details(host, getSAN, san_file)
+def find_and_classify(host: str, ocsp_CA: dict) -> tuple:
+    details, sans = get_CA_details(host)
     output = classify(host, details["ocsp"], sans)
     stapling = check_stapling(host)
     for ocsp in details["ocsp"]:
@@ -165,3 +164,4 @@ def find_and_classify(host: str, getSAN: bool, san_file: str, ocsp_CA: dict) -> 
 
 if __name__ == "__main__":
     main()
+
