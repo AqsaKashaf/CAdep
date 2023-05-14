@@ -3,12 +3,35 @@
 
 import re
 import urllib.parse
-
 import tldextract
 import logging
+from iso3166 import countries
+from datetime import datetime
+import dateutil.relativedelta
+
 
 log = logging.getLogger(__name__)
 
+
+def get_last_month():
+    return (datetime.now() + dateutil.relativedelta.relativedelta(months=-1)).strftime("%Y%m")
+
+def check_valid_country(code: str) -> str:
+    data = countries.get(code)
+    if(data):
+        return data.alpha2.lower()
+    return None
+
+
+def write_results(country, service, month, data):
+    filename = f"{country}-{service}-{month}"
+    print(filename)
+    f = open(filename,"a")
+    for (r,w),d in data.items():
+        f.write(f"{r},{','.join(d)}\n")
+    f.close()
+    
+    
 
 def add_CA_to_OCSP_NAMES(ocsps: list,ca: str) -> None:
     f = open("OCSP_NAMES","a")

@@ -81,11 +81,11 @@ def parse_cert(cert: str) -> dict:
         if(crl_domain):
             result["ocsp"].append(crl_domain)
     
-        san_list = cert["subjectAltName"]
-        
-        san_list = [i[1].replace("*.","") for i in san_list]
-        san_list = set([get_domain_from_subdomain(i) for i in san_list])
-        sans = ",".join(san_list)
+    san_list = cert["subjectAltName"]
+    
+    san_list = [i[1].replace("*.","") for i in san_list]
+    san_list = set([get_domain_from_subdomain(i) for i in san_list])
+    sans = ",".join(san_list)
 
     return result, sans
 
@@ -154,7 +154,7 @@ def main():
 def find_and_classify(host: str, ocsp_CA: dict) -> tuple:
     details, sans = get_CA_details(host)
     output = classify(host, details["ocsp"], sans)
-    stapling = check_stapling(host)
+    stapling = str(check_stapling(host))
     for ocsp in details["ocsp"]:
         if(ocsp in ocsp_CA):
             return (host, ocsp, ocsp_CA[ocsp], output, stapling)
